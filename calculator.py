@@ -81,13 +81,13 @@ def main():
     w_eff_min = powerInput(slope_min, strickler_min)
     print(f"Slope (min): {slope_min:.6f}")
     print(f"Strickler (min): {strickler_min}")
-    print(f"Result of power input min: {w_eff_min:.2f} w/m²")
+    print(f"Result of power input min: {w_eff_min:.6f} w/m²")
     
     print("\n----- Max of Power input -----")
     w_eff_max = powerInput(slope_max, strickler_max)
     print(f"Slope (max): {slope_max:.6f}")
     print(f"Strickler (max): {strickler_max}")
-    print(f"Result of power input max: {w_eff_max:.2f} w/m²")
+    print(f"Result of power input max: {w_eff_max:.6f} w/m²")
 
 if __name__ == "__main__":
     main()
