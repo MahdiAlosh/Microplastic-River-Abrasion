@@ -2,11 +2,22 @@ import math as m
 import pandas as pd
 import os.path
 from tabulate import tabulate
+import re  # Regular expressions for extracting type numbers
+
+def extract_type_number(type_name):
+    """
+    Extract the type number from a type name string.
+    Example: "Typ 10: Kiesgeprägte Ströme" -> 10
+    """
+    match = re.search(r"Typ\s*(\d+)", type_name)
+    if match:
+        return int(match.group(1))
+    return None
 
 def powerInput(slope, strickler):
     p = 980   # density in kg/m³
     g = 9.81  # acceleration in m/s²
-    h = 1.53  # hight of water column in m
+    h = 1.53  # height of water column in m
     e = 0.1   # coefficient of efficiency
     r = h     # hydraulic radius ^2/3
 
@@ -17,7 +28,7 @@ def powerInput(slope, strickler):
     
     return result
 
-def polymerCalcutator(w_eff):
+def polymerCalculator(w_eff):
     """
     Multiply the power input value with each polymer coefficient and return results.
     Args:
@@ -33,11 +44,10 @@ def polymerCalcutator(w_eff):
         "pa6": 0.32447
         }
     
-    # s = None # for total length
     # Calculate the result for each polymer by multiplying w_eff with the polymer coefficient
     result = {}
     for name, coefficient in polymer.items():
-        result[name] = w_eff * coefficient # * s
+        result[name] = w_eff * coefficient
     
     return result
 
@@ -117,6 +127,7 @@ def main():
             water_type = row["Gewässertyp"]
             total_length = row["Länge"]
             print(f"{water_type}: {total_length} km")
+            
 
     print(f"\nTotal Length of All Water Bodies: {result_df['Länge'].sum():.2f} km")
     # ======================================
@@ -137,11 +148,29 @@ def main():
         
         # Calculate min values
         w_eff_min = powerInput(slope_min, strickler_min)
-        relative_polymer_min = polymerCalcutator(w_eff_min)
+        relative_polymer_min = polymerCalculator(w_eff_min)
         
         # Calculate max values
         w_eff_max = powerInput(slope_max, strickler_max)
-        relative_polymer_max = polymerCalcutator(w_eff_max)
+        relative_polymer_max = polymerCalculator(w_eff_max)
+        
+        # Extract the type number from the type name
+        type_number = extract_type_number(type_name)
+        if type_number is None:
+            print(f"Warning: Could not extract type number from {type_name}. Skipping calculations.")
+            continue
+        
+        # Find the total length for the current type number
+        total_length_row = result_df[result_df["Gewässertyp"].str.contains(f"Typ: {type_number}")]
+        if total_length_row.empty:
+            print(f"Warning: No total length found for type {type_name} (Type Number: {type_number}). Setting length-dependent values to 0.")
+            total_length = 0  # Set total length to 0 if not found
+        else:
+            total_length = total_length_row.iloc[0]["Länge"]
+        
+        # Calculate min and max values multiplied by total length
+        relative_polymer_min_with_length = {k: v * total_length for k, v in relative_polymer_min.items()}
+        relative_polymer_max_with_length = {k: v * total_length for k, v in relative_polymer_max.items()}
         
         # Print detailed results for each type
         print("\nDetailed Results:")
@@ -156,19 +185,21 @@ def main():
         print(tabulate(params_table, headers="firstrow", tablefmt="grid"))
         
         # Create a table for polymer results
-        polymer_table = [["Polymer", "Min Value (mg/m²*m)", "Max Value (mg/m²*m)"]]
+        polymer_table = [["Polymer", "Min Value (mg/m²*m)", "Max Value (mg/m²*m)", "Min Value (s)", "Max Value (s)"]]
         for polymer in relative_polymer_min.keys():
             polymer_table.append([
                 polymer.upper(), 
                 f"{relative_polymer_min[polymer]:.6f}", 
-                f"{relative_polymer_max[polymer]:.6f}"
+                f"{relative_polymer_max[polymer]:.6f}",
+                f"{relative_polymer_min_with_length[polymer]:.6f}",
+                f"{relative_polymer_max_with_length[polymer]:.6f}"
             ])
         print(tabulate(polymer_table, headers="firstrow", tablefmt="grid"))
         
         # Store results for summary table
         result_row = {
-            #"Type": f"{i+1}. {type_name}",
             "Type": type_name,
+            "Length (km)": total_length,
             "Min Power (w/m²)": w_eff_min,
             "Max Power (w/m²)": w_eff_max
         }
@@ -177,21 +208,38 @@ def main():
         for polymer in relative_polymer_min.keys():
             result_row[f"Min {polymer.upper()} (mg/m²*m)"] = relative_polymer_min[polymer]
             result_row[f"Max {polymer.upper()} (mg/m²*m)"] = relative_polymer_max[polymer]
-            
-        all_results.append(result_row)
+            result_row[f"Min {polymer.upper()} To. Length (s) (mg/m²*m)"] = relative_polymer_min_with_length[polymer]
+            result_row[f"Max {polymer.upper()} To. Length (s) (mg/m²*m)"] = relative_polymer_max_with_length[polymer]
     
+        all_results.append(result_row)
+
     # Create a DataFrame
     df_results = pd.DataFrame(all_results)
     
     # Format numeric columns
     numeric_cols = df_results.columns.drop('Type')
+
     for col in numeric_cols:
-        df_results[col] = df_results[col].map('{:.6f}'.format)
-    
+        if col == "Length (km)":  # Special formatting for the "Länge" column
+            df_results[col] = df_results[col].map('{:.2f}'.format)
+        else:
+            df_results[col] = df_results[col].map('{:.6f}'.format)
+
+    # Add a new row for "total_length_all_rivers"
+    new_row = {"Type": "Gesamte Länge aller Flüsse", "Length (km)": result_df['Länge'].sum()}
+    # Fill other columns with empty values
+    for col in numeric_cols:
+        if col != "Length (km)":
+            new_row[col] = " "  # empty string
+    # Append the new row to the DataFrame
+    all_results.append(new_row)
+
+    df_results = pd.DataFrame(all_results)
+
     # Export to Excel
     output_file = "calculation_results.xlsx"
     df_results.to_excel(output_file, index=False)
-    print(f"\nResults exported to {output_file}")
+    print(f"\nResults exported to {output_file}\n")
 
 if __name__ == "__main__":
     main()
