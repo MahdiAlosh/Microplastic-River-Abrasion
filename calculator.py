@@ -4,14 +4,16 @@ import os.path
 from tabulate import tabulate
 import re  # Regular expressions for extracting type numbers
 
-def extract_type_number(type_name):
+def extract_type_identifier(type_name):
     """
-    Extract the type number from a type name string.
+    Extract the type number (and optional suffix) from a type name string.
     Example: "Typ 10: Kiesgeprägte Ströme" -> 10
+             "Typ: 15_g" -> 15_g
     """
-    match = re.search(r"Typ\s*(\d+)", type_name)
+    match = re.search(r"Typ\s*(\d+(\.\d+)?(_[A-Za-z]+)?)|\(Typ:\s*(\d+(\.\d+)?(_[A-Za-z]+)?)\)", type_name)
     if match:
-        return int(match.group(1))
+        # Return the matched group (either from "Typ <number>" or "(Typ: <number>)") and normalize to lowercase
+        return (match.group(1) or match.group(4)).lower()
     return None
 
 def powerInput(slope, strickler):
@@ -139,7 +141,26 @@ def main():
     for i, type_name in enumerate(data["Typ und Bezeichnung"], 0):
         print(f"\n*********** {i+1}. {type_name} ***********")
         selected_row = data.iloc[i]
-    
+
+        # Extract the type identifier from the current type name
+        type_identifier_data = extract_type_identifier(type_name)
+        if type_identifier_data is None:
+            # If no identifier is found, print a warning and skip this iteration
+            print(f"Warning: Could not extract type number from '{type_name}'. Skipping calculations.")
+            continue
+        
+        # Find matching rows in result_df where the type identifier matches
+        matching_rows = result_df[result_df["Gewässertyp"].apply(lambda x: extract_type_identifier(x) == type_identifier_data)]
+        
+        # Select the matching row and extract the total length
+        if matching_rows.empty:
+            # If no matching rows are found, print a warning and set total length to 0
+            print(f"Warning: No total length found for type '{type_name}' (Type {type_identifier_data}). Setting length-dependent values to 0.")
+            total_length = 0
+        else:
+            # If matching rows are found, extract the total length from the first matching row
+            total_length = matching_rows.iloc[0]["Länge"]
+
         # Get min and max values
         slope_min = selected_row["Slope (min) in ‰"] / 1000  # Convert from ‰ to decimal
         slope_max = selected_row["Slope (max) in ‰"] / 1000  # Convert from ‰ to decimal
@@ -153,20 +174,6 @@ def main():
         # Calculate max values
         w_eff_max = powerInput(slope_max, strickler_max)
         relative_polymer_max = polymerCalculator(w_eff_max)
-        
-        # Extract the type number from the type name
-        type_number = extract_type_number(type_name)
-        if type_number is None:
-            print(f"Warning: Could not extract type number from {type_name}. Skipping calculations.")
-            continue
-        
-        # Find the total length for the current type number
-        total_length_row = result_df[result_df["Gewässertyp"].str.contains(f"Typ: {type_number}")]
-        if total_length_row.empty:
-            print(f"Warning: No total length found for type {type_name} (Type Number: {type_number}). Setting length-dependent values to 0.")
-            total_length = 0  # Set total length to 0 if not found
-        else:
-            total_length = total_length_row.iloc[0]["Länge"]
         
         # Calculate min and max values multiplied by total length
         relative_polymer_min_with_length = {k: v * total_length for k, v in relative_polymer_min.items()}
