@@ -108,15 +108,16 @@ def calculate_total_length_by_type(excel_file_path, length_column="Länge", type
         return None
   
 def main():
-    excel_file = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\Gewässersteckbriefe mit kSt.xlsx"
-    # excel_file = input("Enter your file path: ")
+    # excel_file = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\Gewässersteckbriefe mit kSt.xlsx"
+    excel_file = input("Enter your file path (Gewässersteckbriefe): ")
     # Load Excel data
     data = load_excel_data(excel_file)
     if data is None:
         return
     
     # Load Excel data
-    excel_file_length = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\2025-02-28 Wasserkoerper Navigator 2022-2027 - Flüsse.xlsx"
+    # excel_file_length = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\2025-02-28 Wasserkoerper Navigator 2022-2027 - Flüsse.xlsx"
+    excel_file_length = input("Enter your file path (2025-02-28 Wasserkoerper): ")
     # Calculate total lengths by water body type
     result_df = calculate_total_length_by_type(excel_file_length)
     if result_df is None:
