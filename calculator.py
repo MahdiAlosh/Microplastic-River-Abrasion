@@ -40,7 +40,7 @@ def polymerCalculator(w_eff):
     """
     polymer = {
         "ps_tio": 1.00036,
-        "ps": 0.42826,
+        "ps": 0.81021,
         "petg": 0.52683,
         "pet": 0.35373,
         "pa6": 0.32447
@@ -110,15 +110,12 @@ def calculate_total_length_by_type(excel_file_path, length_column="Länge", type
 def main():
     # excel_file = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\Gewässersteckbriefe mit kSt.xlsx"
     excel_file = input("Enter your file path (Gewässersteckbriefe): ")
-    # Load Excel data
     data = load_excel_data(excel_file)
     if data is None:
         return
     
-    # Load Excel data
     # excel_file_length = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\2025-02-28 Wasserkoerper Navigator 2022-2027 - Flüsse.xlsx"
     excel_file_length = input("Enter your file path (2025-02-28 Wasserkoerper): ")
-    # Calculate total lengths by water body type
     result_df = calculate_total_length_by_type(excel_file_length)
     if result_df is None:
         return
@@ -193,7 +190,9 @@ def main():
         print(tabulate(params_table, headers="firstrow", tablefmt="grid"))
         
         # Create a table for polymer results
-        polymer_table = [["Polymer", "Min Value (mg/m²*m)", "Max Value (mg/m²*m)", "Min Value (s)", "Max Value (s)"]]
+        polymer_table = [
+            ["Polymer", "Min Value (mg/m²*m)", "Max Value (mg/m²*m)", "Min Value (s)", "Max Value (s)"]
+        ]
         for polymer in relative_polymer_min.keys():
             polymer_table.append([
                 polymer.upper(), 
