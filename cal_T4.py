@@ -44,9 +44,9 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
         diameter_um_min = initial_diameter_um
         remaining_km_min = river_length_km
         step_min = 0
-        sum_volume_loss_um3_min = sum_volume_loss_um3_max = sum_mass_loss_mg_min = sum_mass_loss_mg_max = 0
+        sum_volume_loss_um3_min = sum_volume_loss_um3_max = sum_mass_loss_mg_min = sum_mass_loss_mg_max = sum_loss_diameter_um_min = sum_loss_diameter_um_max = 0
 
-        # print(f"*********** Simulation für {polymer} ***********")
+        # print(f"\nSimulation für {polymer}")
         # print(f"Startdurchmesser: {diameter_um_min} µm")
         initial_volume_um3_min = (math.pi/6) * diameter_um_min**3
         # print(f"Initial Volume (min): {initial_volume_um3_min:.2f} µm³")
@@ -65,6 +65,8 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
             
             # 3. Calculate volume loss (µm³/km)
             volume_loss_um3_min = (mass_loss_mg_min * 1e9) / density  # mg → µg → µm³
+
+            volume_loss_in_cm3_min = volume_loss_um3_min * 1e-12  # µm³ → cm³
             
             # 4. Update volume (µm³)
             initial_volume_um3_min = (math.pi/6) * diameter_um_min**3
@@ -77,8 +79,12 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
                 break
                 
             # 5. Calculate new diameter (µm)
-            new_diameter_um_min = (6 * new_volume_um3_min / math.pi) ** (1/3)
-            
+            new_diameter_cm_min = (6 * volume_loss_in_cm3_min / math.pi) ** (1/3)
+
+            # Convert new diameter from cm to µm
+            new_diameter_um_min = new_diameter_cm_min * 1e4
+            loss_diameter_um_min = diameter_um_min - new_diameter_um_min
+                
             # Progress output
             """ 
             print(f"Schritt {step_min}:")
@@ -94,7 +100,8 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
             sum_mass_loss_mg_min += mass_loss_mg_min
 
             # Update for next iteration
-            diameter_um_min = new_diameter_um_min # um -> µm
+            diameter_um_min = loss_diameter_um_min # um -> µm
+            sum_loss_diameter_um_min += new_diameter_um_min
 
             remaining_km_min -= 1
 
@@ -104,7 +111,7 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
         diameter_um_max = initial_diameter_um
         remaining_km_max = river_length_km
         step_max = 0
-        # print(f"\nSimulation für {polymer} über {river_length_km} km")
+        # print(f"\nSimulation für {polymer}")
         # print(f"Startdurchmesser: {diameter_um_max} µm")
         initial_volume_um3_max = (math.pi/6) * diameter_um_max**3
         # print(f"Initial Volume (max): {initial_volume_um3_max:.2f} µm³")
@@ -123,6 +130,8 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
             
             # 3. Calculate volume loss (µm³/km)
             volume_loss_um3_max = (mass_loss_mg_max * 1e9) / density
+
+            volume_loss_in_cm3_max = volume_loss_um3_max * 1e-12  # µm³ → cm³
             
             # 4. Update volume (µm³)
             initial_volume_um3_max = (math.pi/6) * diameter_um_max**3
@@ -135,7 +144,11 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
                 break
                 
             # 5. Calculate new diameter (µm)
-            new_diameter_um_max = (6 * new_volume_um3_max / math.pi) ** (1/3)
+            new_diameter_cm_max = (6 * volume_loss_in_cm3_max / math.pi) ** (1/3)
+
+            # Convert new diameter from cm to µm
+            new_diameter_um_max = new_diameter_cm_max * 1e4
+            loss_diameter_um_max = diameter_um_max - new_diameter_um_max
             
             # Progress output
             """ 
@@ -152,14 +165,32 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
             sum_mass_loss_mg_max += mass_loss_mg_max
 
             # Update for next iteration
-            diameter_um_max = new_diameter_um_max # um -> µm
+            diameter_um_max = loss_diameter_um_max # um -> µm
+            sum_loss_diameter_um_max += new_diameter_um_max
 
             remaining_km_max -= 1
+
+        """     
+        print("\nEndergebnis:")
+        print(f"MIN: Finaler Durchmesser: {diameter_um_min:.2f} µm")
+        print(f"MAX: Finaler Durchmesser: {diameter_um_max:.2f} µm")
+        print(f"MIN: Gesamtdurchmesserverlust: {sum_loss_diameter_um_min:.2f} µm")
+        print(f"MAX: Gesamtdurchmesserverlust: {sum_loss_diameter_um_max:.2f} µm")
+        print(f"MIN: Gesamtmassenverlust: {sum_mass_loss_mg_min:.2f} mg")
+        print(f"MAX: Gesamtmassenverlust: {sum_mass_loss_mg_max:.2f} mg")
+        print(f"MIN: Gesamtvolumenverlust: {sum_volume_loss_um3_min:.2f} µm³")
+        print(f"MAX: Gesamtvolumenverlust: {sum_volume_loss_um3_max:.2f} µm³")
+        print(f"MIN: Reststrecke: {remaining_km_min:.2f} km")
+        print(f"MAX: Reststrecke: {remaining_km_max:.2f} km")
+        print("="*50)
+        """
 
         # Store results for this polymer
         results[polymer] = {
             'final_diameter_min': diameter_um_min,
             'final_diameter_max': diameter_um_max,
+            'total_loss_diameter_min': sum_loss_diameter_um_min,
+            'total_loss_diameter_max': sum_loss_diameter_um_max,
             'total_mass_loss_min': sum_mass_loss_mg_min,
             'total_mass_loss_max': sum_mass_loss_mg_max,
             'total_volume_loss_min': sum_volume_loss_um3_min,
@@ -169,19 +200,6 @@ def simulate_abrasion(total_length, w_eff_min, w_eff_max):
         }
 
     return results
-    
-    """
-    print("\nEndergebnis:")
-    print(f"MIN: Finaler Durchmesser: {diameter_um_min:.2f} µm")
-    print(f"MAX: Finaler Durchmesser: {diameter_um_max:.2f} µm")
-    print(f"MIN: Gesamtmassenverlust: {sum_mass_loss_mg_min:.2f} mg")
-    print(f"MAX: Gesamtmassenverlust: {sum_mass_loss_mg_max:.2f} mg")
-    print(f"MIN: Gesamtvolumenverlust: {sum_volume_loss_um3_min:.2f} µm³")
-    print(f"MAX: Gesamtvolumenverlust: {sum_volume_loss_um3_max:.2f} µm³")
-    print(f"MIN: Reststrecke: {remaining_km_min:.2f} km")
-    print(f"MAX: Reststrecke: {remaining_km_max:.2f} km")
-    print("="*50)
-    """
 
 def save_results_to_excel(input_file, output_file, all_results):
     """Save results to an Excel file"""
@@ -194,6 +212,8 @@ def save_results_to_excel(input_file, output_file, all_results):
                 'Polymer': polymer,
                 'Final Diameter Min (µm)': values['final_diameter_min'],
                 'Final Diameter Max (µm)': values['final_diameter_max'],
+                'Total Diameter Loss Min (µm)': values['total_loss_diameter_min'],
+                'Total Diameter Loss Max (µm)': values['total_loss_diameter_max'],
                 'Total Mass Loss Min (mg)': values['total_mass_loss_min'],
                 'Total Mass Loss Max (mg)': values['total_mass_loss_max'],
                 'Total Volume Loss Min (µm³)': values['total_volume_loss_min'],
