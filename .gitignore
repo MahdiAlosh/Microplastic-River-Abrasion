@@ -1,4 +1,10 @@
 # Virtual Environment
 venv/
-*.xlsx
+# Python cache
+__pycache__/
+# *.xlsx
+ref_*.xlsx
+ref_*.xlsx
+calculator.py
+cal_T4.py
 *test*

@@ -108,14 +108,14 @@ def calculate_total_length_by_type(excel_file_path, length_column="Länge", type
         return None
   
 def main():
-    # excel_file = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\Gewässersteckbriefe mit kSt.xlsx"
-    excel_file = input("Enter your file path (Gewässersteckbriefe): ")
+    excel_file = "Gewässersteckbriefe mit kSt.xlsx"
+    # excel_file = input("Enter your file path (Gewässersteckbriefe): ")
     data = load_excel_data(excel_file)
     if data is None:
         return
     
-    # excel_file_length = "C:\\Users\\Ali Al Mahdi\\Desktop\\HTWD\\5 Semester\\Arbeit\\2025-02-28 Wasserkoerper Navigator 2022-2027 - Flüsse.xlsx"
-    excel_file_length = input("Enter your file path (2025-02-28 Wasserkoerper): ")
+    excel_file_length = "2025-02-28 Wasserkoerper Navigator 2022-2027  - Flusse.xlsx"
+    # excel_file_length = input("Enter your file path (2025-02-28 Wasserkoerper): ")
     result_df = calculate_total_length_by_type(excel_file_length)
     if result_df is None:
         return
@@ -233,7 +233,7 @@ def main():
             df_results[col] = df_results[col].map('{:.6f}'.format)
 
     # Add a new row for "total_length_all_rivers"
-    new_row = {"Type": "Gesamte Länge aller Flüsse", "Length (km)": result_df['Länge'].sum()}
+    new_row = {"Type": "Total length of all rivers", "Length (km)": result_df['Länge'].sum()}
     # Fill other columns with empty values
     for col in numeric_cols:
         if col != "Length (km)":
@@ -244,7 +244,7 @@ def main():
     df_results = pd.DataFrame(all_results)
 
     # Export to Excel
-    output_file = "calculation_results.xlsx"
+    output_file = "re_calculation_results.xlsx"
     df_results.to_excel(output_file, index=False)
     print(f"\nResults exported to {output_file}\n")
 
