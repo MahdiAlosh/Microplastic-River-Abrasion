@@ -1,8 +1,15 @@
 import pandas as pd
-from openpyxl import load_workbook
+#from openpyxl import load_workbook
+from PA.pa import pa
+from PET.pet import pet
+from PS.ps import ps
 
 def save_results_to_excel(input_file, output_file, all_results):
     data = []
+    
+    pa_df = pa()
+    pet_df = pet()
+    ps_df = ps()
 
     for water_type, polymers_data in all_results.items():
         for polymer, values in polymers_data.items():
@@ -23,14 +30,17 @@ def save_results_to_excel(input_file, output_file, all_results):
     try:
         df = pd.DataFrame(data)
         if input_file == output_file:
-            with pd.ExcelWriter(output_file, engine='openpyxl', mode='a') as writer:
-                book = load_workbook(output_file)
-                if 'Polymer_Results' in book.sheetnames:
-                    del book['Polymer_Results']
-                book.save(output_file)
+            with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
                 df.to_excel(writer, sheet_name='Polymer_Results', index=False)
+                pa_df.to_excel(writer, sheet_name="PA", index=False)
+                pet_df.to_excel(writer, sheet_name="PET", index=False)
+                ps_df.to_excel(writer, sheet_name="PS", index=False)
         else:
-            df.to_excel(output_file, sheet_name='Polymer_Results', index=False)
+            with pd.ExcelWriter(output_file, engine='openpyxl', mode='a') as writer:
+                df.to_excel(writer, sheet_name='Polymer_Results', index=False)
+                pa_df.to_excel(writer, sheet_name="PA", index=False)
+                pet_df.to_excel(writer, sheet_name="PET", index=False)
+                ps_df.to_excel(writer, sheet_name="PS", index=False)
 
     except Exception as e:
         print(f"Error saving results to Excel: {e}")
