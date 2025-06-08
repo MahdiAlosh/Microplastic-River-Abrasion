@@ -7,6 +7,6 @@ ref_*.xlsx
 ref_*.xlsx
 # to untrack files
 # git rm --cached calculator.py cal_T4.py
-*calculator*
+calculator*
 *cal_T4*
 *test*

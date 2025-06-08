@@ -1,5 +1,5 @@
 from my_water_analysis_sim.utils import extract_type_identifier, powerInput
-from my_water_analysis_sim.calculator import polymerCalculator
+from my_water_analysis_sim.length_calculator import polymerCalculator
 import pandas as pd
 from tabulate import tabulate
 
