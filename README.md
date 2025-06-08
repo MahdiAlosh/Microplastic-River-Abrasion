@@ -8,16 +8,76 @@ This project analyzes microplastic abrasion in river environments using experime
 
 ```
 Microplastic-River-Abrasion/
-│
-├── data/                   # Input Excel files with polymer and river data
-├── src/
-│   ├── excel_io.py         # Handles reading and writing Excel files using pandas
-│   ├── calculator.py       # Contains all scientific calculations related to abrasion and polymer analysis
-│   └── utils.py            # Helper functions (e.g., unit conversions, performance timing)
-│
-├── main.py                 # Main script that connects all modules and runs the analysis
-├── requirements.txt        # List of Python dependencies
-└── README.md               # Project documentation (this file)
+├── 2025-02-28 Wasserkoerper Navigator 2022-2027  - Flusse.xlsx
+├── Gewässersteckbriefe mit kSt.xlsx
+├── PA
+│   ├── pa.py
+│   └── scr
+│       ├── __init__.py
+│       ├── macro.py
+│       ├── micro.py
+│       ├── pa_summary_df.py
+│       ├── sinks_EU_Clothing (product sector)_PA_Surface water (macro).csv
+│       ├── sinks_EU_Clothing (product sector)_PA_Surface water (micro).csv
+│       ├── sinks_EU_Domestic primary plastic production_PA_Surface water (micro).csv
+│       ├── sinks_EU_Household textiles (product sector)_PA_Surface water (macro).csv
+│       ├── sinks_EU_Household textiles (product sector)_PA_Surface water (micro).csv
+│       ├── sinks_EU_Import of primary plastics_PA_Surface water (micro).csv
+│       ├── sinks_EU_Intentionally produced microparticles_PA_Surface water (micro).csv
+│       └── sinks_EU_Technical textiles_PA_Surface water (macro).csv
+├── PET
+│   ├── pet.py
+│   └── scr
+│       ├── __init__.py
+│       ├── macro.py
+│       ├── micro.py
+│       ├── pet_summary_df.py
+│       ├── sinks_EU_Clothing (product sector)_PET_Surface water (macro).csv
+│       ├── sinks_EU_Clothing (product sector)_PET_Surface water (micro).csv
+│       ├── sinks_EU_Domestic primary plastic production_PET_Surface water (micro).csv
+│       ├── sinks_EU_Household textiles (product sector)_PET_Surface water (macro).csv
+│       ├── sinks_EU_Household textiles (product sector)_PET_Surface water (micro).csv
+│       ├── sinks_EU_Import of primary plastics_PET_Surface water (micro).csv
+│       ├── sinks_EU_Intentionally produced microparticles_PET_Surface water (micro).csv
+│       ├── sinks_EU_Packaging_PET_Surface water (macro).csv
+│       ├── sinks_EU_Packaging_PET_Surface water (micro).csv
+│       ├── sinks_EU_Technical textiles_PET_Surface water (macro).csv
+│       └── sinks_EU_Technical textiles_PET_Surface water (micro).csv
+├── PS
+│   ├── ps.py
+│   └── scr
+│       ├── __init__.py
+│       ├── macro.py
+│       ├── micro.py
+│       ├── ps_summary_df.py
+│       ├── sinks_EU_Agriculture_PS_Surface water (macro).csv
+│       ├── sinks_EU_Agriculture_PS_Surface water (micro).csv
+│       ├── sinks_EU_Domestic primary plastic production_PS_Surface water (micro).csv
+│       ├── sinks_EU_Import of primary plastics_PS_Surface water (micro).csv
+│       ├── sinks_EU_Packaging_PS_Surface water (macro).csv
+│       └── sinks_EU_Packaging_PS_Surface water (micro).csv
+├── README.md
+├── cal_T4.py
+├── calculation_results.xlsx
+├── calculator.py
+├── finale_results.xlsx
+├── main.py
+├── my_microplastic_sim
+│   ├── __init__.py
+│   ├── config.py
+│   ├── exporter.py
+│   ├── loader.py
+│   └── simulator.py
+├── my_water_analysis_sim
+│   ├── __init__.py
+│   ├── excel_io.py
+│   ├── length_calculator.py
+│   └── utils.py
+└── processing
+    ├── em_factor.py
+    ├── file_loader.py
+    ├── output_formatter.py
+    └── type_processor.py
 ```
 
 ---
