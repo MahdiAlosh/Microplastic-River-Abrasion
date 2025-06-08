@@ -3,6 +3,7 @@ import pandas as pd
 from PA.pa import pa
 from PET.pet import pet
 from PS.ps import ps
+from processing.em_factor import calculate_emission_factors
 
 def save_results_to_excel(input_file, output_file, all_results):
     data = []
@@ -10,6 +11,10 @@ def save_results_to_excel(input_file, output_file, all_results):
     pa_df = pa()
     pet_df = pet()
     ps_df = ps()
+
+    # Calculate emission factors
+    emission_factors = calculate_emission_factors()
+    emission = []
 
     for water_type, polymers_data in all_results.items():
         for polymer, values in polymers_data.items():
@@ -27,20 +32,37 @@ def save_results_to_excel(input_file, output_file, all_results):
                 'Remaining Km Min': values['remaining_km_min'],
                 'Remaining Km Max': values['remaining_km_max']
             })
+    for district, factor in emission_factors.items():
+        emission.append({
+            'District': district,
+            'Emission Factor': factor
+        })
+
     try:
         df = pd.DataFrame(data)
-        if input_file == output_file:
-            with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+        emission_df = pd.DataFrame(emission)
+        with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
                 df.to_excel(writer, sheet_name='Polymer_Results', index=False)
                 pa_df.to_excel(writer, sheet_name="PA", index=False)
                 pet_df.to_excel(writer, sheet_name="PET", index=False)
                 ps_df.to_excel(writer, sheet_name="PS", index=False)
-        else:
-            with pd.ExcelWriter(output_file, engine='openpyxl', mode='a') as writer:
-                df.to_excel(writer, sheet_name='Polymer_Results', index=False)
-                pa_df.to_excel(writer, sheet_name="PA", index=False)
-                pet_df.to_excel(writer, sheet_name="PET", index=False)
-                ps_df.to_excel(writer, sheet_name="PS", index=False)
+                emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+        '''
+        # if input_file == output_file:
+        #     with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+        #         df.to_excel(writer, sheet_name='Polymer_Results', index=False)
+        #         pa_df.to_excel(writer, sheet_name="PA", index=False)
+        #         pet_df.to_excel(writer, sheet_name="PET", index=False)
+        #         ps_df.to_excel(writer, sheet_name="PS", index=False)
+        #         emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+        # else:
+        #     with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
+        #         df.to_excel(writer, sheet_name='Polymer_Results', index=False)
+        #         pa_df.to_excel(writer, sheet_name="PA", index=False)
+        #         pet_df.to_excel(writer, sheet_name="PET", index=False)
+        #         ps_df.to_excel(writer, sheet_name="PS", index=False)
+        #         emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+        '''
 
     except Exception as e:
         print(f"Error saving results to Excel: {e}")
