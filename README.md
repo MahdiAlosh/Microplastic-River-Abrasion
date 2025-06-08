@@ -52,7 +52,6 @@ Clone the repository and install the dependencies:
 ```bash
 git clone https://github.com/MahdiAlosh/Microplastic-River-Abrasion.git
 cd Microplastic-River-Abrasion
-pip install -r requirements.txt
 ```
 
 > Requires Python 3.10 or higher.
@@ -83,20 +82,12 @@ print(f"Polymer length: {result:.2f} µm")
 ```
 
 ---
-
 ## 📦 Requirements
 
 - `pandas`
 - `numpy`
 - `openpyxl`
 - Python built-in libraries (`math`, `time`)
-
-Install all dependencies with:
-
-```bash
-pip install -r requirements.txt
-```
-
 ---
 
 ## 🎯 Project Goal
