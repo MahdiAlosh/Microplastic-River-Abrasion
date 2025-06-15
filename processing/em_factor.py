@@ -1,6 +1,6 @@
 def calculate_emission_factors():
   # Konstante für EU-Bevölkerung
-  eu_population = 448_000_000
+  eu_population = 448000000
 
   # Rohdaten: District und deren Population
   population_data = {
@@ -19,6 +19,12 @@ def calculate_emission_factors():
       "Nordsachsen": 199688
   }
 
+  # summrize population data
+  total_population = sum(population_data.values())
+  # factor for total population
+  total_factor = total_population / eu_population
+  # print(f"Total Population: {total_population}, Factor: {total_factor}")
+
   # Ergebnis-Dictionary mit Emission Factors
   emission_factors = {}
 
@@ -28,7 +34,7 @@ def calculate_emission_factors():
       emission_factors[district] = round(factor, 8)  # z.B. auf 8 Nachkommastellen gerundet
 
   # Ausgabe (optional)
-  for district, factor in emission_factors.items():
-      print(f"{district}: {factor}")
+#   for district, factor in emission_factors.items():
+#       print(f"{district}: {factor}")
 
-  return emission_factors
+  return emission_factors, total_factor, total_population

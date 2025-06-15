@@ -26,7 +26,7 @@ files = [
 def extract_macro_values():
     """Extracts second last column values from multiple files."""
     results = {}
-    print()
+    # print()
     for file in files:
         results[file] = extract_second_last_column(file)
         # print(f"Values for macro:", results[file])
@@ -41,11 +41,11 @@ def summarize_macro_results():
         values = [float(v) for v in values]
         sum_file = sum(values)
         sums_per_file.append(sum_file)
-        print(f"Sum: {sum_file}")
-        print()
+        # print(f"Sum: {sum_file}")
+        # print()
 
     sum_all = sum(sums_per_file)
     sum_all *= 1000  # Convert to kg
-    print(f"Total sum across all files: {sum_all}\n")
+    # print(f"Total sum across all files: {sum_all}\n")
     return sum_all
 

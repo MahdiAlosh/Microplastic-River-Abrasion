@@ -1,12 +1,12 @@
 import pandas as pd
 
-def print_total_lengths(result_df):
+# def print_total_lengths(result_df):
     
-    print("\nTotal Length by Water Body Type:\n" + "="*32)
-    for _, row in result_df.iterrows():
-        print(f"{row['Gewässertyp']}: {row['Länge']} km")
+#     print("\nTotal Length by Water Body Type:\n" + "="*32)
+#     for _, row in result_df.iterrows():
+#         print(f"{row['Gewässertyp']}: {row['Länge']} km")
     
-    print(f"\nTotal Length of All Water Bodies: {result_df['Länge'].sum():.2f} km")
+#     print(f"\nTotal Length of All Water Bodies: {result_df['Länge'].sum():.2f} km")
 
 def export_results(all_results, result_df):
     df = pd.DataFrame(all_results)

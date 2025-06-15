@@ -10,7 +10,7 @@ def ps():
     # Create summary DataFrame
     ps_summary_df = create_summary_dataframe(macro_sum, micro_sum)
 
-    return ps_summary_df
+    return ps_summary_df, macro_sum, micro_sum
     # Save to Excel
     # try:
     #     summary_df.to_excel('summary_results.xlsx', index=False, sheet_name='PS')
