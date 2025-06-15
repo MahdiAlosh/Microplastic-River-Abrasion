@@ -45,6 +45,7 @@ def summarize_macro_results():
         print()
 
     sum_all = sum(sums_per_file)
+    sum_all *= 1000  # Convert to kg
     print(f"Total sum across all files: {sum_all}\n")
     return sum_all
 

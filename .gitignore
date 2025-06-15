@@ -5,6 +5,8 @@ __pycache__/
 # *.xlsx
 ref_*.xlsx
 ref_*.xlsx
+calculation_results.xlsx
+finale_results.xlsx
 # to untrack files
 # git rm --cached calculator.py cal_T4.py
 calculator*
