@@ -5,6 +5,7 @@ from my_microplastic_sim.loader import load_excel_data
 from my_microplastic_sim.simulator import simulate_abrasion
 from my_microplastic_sim.exporter import save_results_to_excel
 from Emission_sim.plastic_emission import plastic_emission
+from Emission_sim.plastic_em_per_river import plastic_emission_per_river
 
 def main():
     # 1. Hauptfunktion des Programms => Einstiegspunkt
@@ -44,7 +45,9 @@ def main():
     print(f"Simulation completed for {counter} water types.\n")
     
     # 3. Emission_sim-Funktionen
-    plastic_emission()
+    plastic_em = plastic_emission()
+
+    plastic_emission_per_river(data, plastic_em)
 
 if __name__ == "__main__":
     main()

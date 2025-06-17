@@ -24,8 +24,10 @@ def plastic_emission():
     plastic_em_macro = total_factor * macro_summary
     plastic_em_micro = total_factor * micro_summary
 
-    print(f"Total Population: {total_population}, Factor: {total_factor}")
-    print(f"Macro Plastic Emission: {macro_summary:.2f} kg")
-    print(f"Micro Plastic Emission: {micro_summary:.2f} kg")
-    print(f"Plastic Emission Macro: {plastic_em_macro:.2f} kg")
-    print(f"Plastic Emission Micro: {plastic_em_micro:.2f} kg")
+    # print(f"Total Population: {total_population}, Factor: {total_factor}")
+    # print(f"Macro Plastic Emission: {macro_summary:.2f} kg")
+    # print(f"Micro Plastic Emission: {micro_summary:.2f} kg")
+    # print(f"Plastic Emission Macro: {plastic_em_macro:.2f} kg")
+    # print(f"Plastic Emission Micro: {plastic_em_micro:.2f} kg")
+
+    return plastic_em_macro, plastic_em_micro
