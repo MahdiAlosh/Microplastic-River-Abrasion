@@ -32,14 +32,23 @@ def plastic_emission_per_river(data,  plastic_em):
       # print(f"Plastic Emission Micro per River {index}: {plastic_em_per_river_micro:.2f} kg/km")
       
 
-  print(f"Plastic Emission Macro: {plastic_em[0]:.2f} kg")
-  print(f"Plastic Emission Micro: {plastic_em[1]:.2f} kg")
-  print(f"Total Length of All Rivers: {total_length:.2f} km")
+  # print(f"Plastic Emission Macro: {plastic_em[0]:.2f} kg")
+  # print(f"Plastic Emission Micro: {plastic_em[1]:.2f} kg")
+  # print(f"Total Length of All Rivers: {total_length:.2f} km")
   plastic_em_per_river_macro = plastic_em[0] / total_length
   plastic_em_per_river_micro = plastic_em[1] / total_length
   print(f"Plastic Emission Macro per River: {plastic_em_per_river_macro:.2f} kg/km")
   print(f"Plastic Emission Micro per River: {plastic_em_per_river_micro:.2f} kg/km")
 
+  # emission mass = river type length * plastic emission per km
+  for river_type, length in results.items():
+      index = length['index']
+      length = length['length: ']
+      emission_mass_macro = length * plastic_em_per_river_macro
+      emission_mass_micro = length * plastic_em_per_river_micro
+      print(f"River index: {index}, Length: {length:.2f} km")
+      print(f"Emission Mass Macro: {emission_mass_macro:.2f} kg")
+      print(f"Emission Mass Micro: {emission_mass_micro:.2f} kg")
 
   # print("Results:\n", results)
   # print(f"Plastic Emission Macro: {plastic_em[0]:.2f} kg")
