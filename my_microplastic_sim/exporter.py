@@ -6,7 +6,7 @@ from PET.pet import pet
 from PS.ps import ps
 from processing.em_factor import calculate_emission_factors
 
-def save_results_to_excel(output_file, all_results):
+def save_results_to_excel(output_file, all_results, em_results):
     data = []
     
     pa_df,_,_= pa()
@@ -14,8 +14,11 @@ def save_results_to_excel(output_file, all_results):
     ps_df,_,_ = ps()
 
     # Calculate emission factors
-    emission_factors,_,_ = calculate_emission_factors()
-    emission = []
+    # emission_factors,_,_ = calculate_emission_factors()
+    # emission = []
+
+    # Iterate through all results and prepare data for DataFrame
+    mp_emission_per_river = []
 
     for water_type, polymers_data in all_results.items():
         for polymer, values in polymers_data.items():
@@ -33,15 +36,27 @@ def save_results_to_excel(output_file, all_results):
                 'Remaining Km Min': values['remaining_km_min'],
                 'Remaining Km Max': values['remaining_km_max']
             })
-    for district, factor in emission_factors.items():
-        emission.append({
-            'District': district,
-            'Emission Factor': factor
+
+    # for district, factor in emission_factors.items():
+    #     emission.append({
+    #         'District': district,
+    #         'Emission Factor': factor
+    #     })
+
+    for river_type, length in em_results.items():
+        mp_emission_per_river.append({
+            'River Type': river_type,
+            'Length (km)': length['length: '],
+            'Emission Mass Macro (kg)': length['emission_mass_macro'],
+            'Emission Mass Micro (kg)': length['emission_mass_micro'],
+            'Number of Emitted Macro': length['number_of_emitted_macro'],
+            'Number of Emitted Micro': length['number_of_emitted_micro']
         })
 
     try:
         df = pd.DataFrame(data)
-        emission_df = pd.DataFrame(emission)
+        # emission_df = pd.DataFrame(emission)
+        mp_emission_per_river_df = pd.DataFrame(mp_emission_per_river)
         if os.path.exists(output_file):
             # File exists: append/replace sheets
             with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
@@ -49,7 +64,8 @@ def save_results_to_excel(output_file, all_results):
                     pa_df.to_excel(writer, sheet_name="PA", index=False)
                     pet_df.to_excel(writer, sheet_name="PET", index=False)
                     ps_df.to_excel(writer, sheet_name="PS", index=False)
-                    emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+                    # emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+                    mp_emission_per_river_df.to_excel(writer, sheet_name="Emission_Per_River", index=False)
         else:
             # File doesn't exist: create and write all sheets
             with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
@@ -57,7 +73,8 @@ def save_results_to_excel(output_file, all_results):
                 pa_df.to_excel(writer, sheet_name="PA", index=False)
                 pet_df.to_excel(writer, sheet_name="PET", index=False)
                 ps_df.to_excel(writer, sheet_name="PS", index=False)
-                emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+                # emission_df.to_excel(writer, sheet_name="Emission_Factors", index=False)
+                mp_emission_per_river_df.to_excel(writer, sheet_name="Emission_Per_River", index=False)
 
     except Exception as e:
         print(f"Error saving results to Excel: {e}")

@@ -17,13 +17,13 @@ def main():
     # Gesamtlängen ausgeben
     # print_total_lengths(result_df)
 
-    # Typen verarbeiten
+    # 2. Typen verarbeiten
     all_results = process_all_types(data, result_df)
 
     # Ergebnisse exportieren
     export_results(all_results, result_df)
 
-    #2. MyMicroplasticSim-Funktionen
+    # 3. MyMicroplasticSim-Funktionen
     excel_file = "../Microplastic-River-Abrasion/calculation_results.xlsx"
     data = load_excel_data(excel_file)
     if data is None:
@@ -40,14 +40,16 @@ def main():
             results = simulate_abrasion(total_length, w_eff_min, w_eff_max)
             all_results[water_type] = results
 
-    save_results_to_excel("finale_results.xlsx", all_results)
-    print("Results saved in finale_results.xlsx\n")
     print(f"Simulation completed for {counter} water types.\n")
     
-    # 3. Emission_sim-Funktionen
+    # 4. Emission_sim-Funktionen
     plastic_em = plastic_emission()
+    em_results = plastic_emission_per_river(data, plastic_em)
 
-    plastic_emission_per_river(data, plastic_em)
+    # 5. Ergebnisse in Excel speichern
+    save_results_to_excel("finale_results.xlsx", all_results, em_results)
+    print("Results saved in finale_results.xlsx\n")
+
 
 if __name__ == "__main__":
     main()
