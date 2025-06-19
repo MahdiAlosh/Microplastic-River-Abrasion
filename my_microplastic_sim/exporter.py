@@ -4,7 +4,6 @@ import pandas as pd
 from PA.pa import pa
 from PET.pet import pet
 from PS.ps import ps
-from processing.em_factor import calculate_emission_factors
 
 def save_results_to_excel(output_file, all_results, em_results):
     data = []
@@ -43,14 +42,14 @@ def save_results_to_excel(output_file, all_results, em_results):
     #         'Emission Factor': factor
     #     })
 
-    for river_type, length in em_results.items():
+    for river_type, value in em_results.items():
         mp_emission_per_river.append({
             'River Type': river_type,
-            'Length (km)': length['length: '],
-            'Emission Mass Macro (kg)': length['emission_mass_macro'],
-            'Emission Mass Micro (kg)': length['emission_mass_micro'],
-            'Number of Emitted Macro': length['number_of_emitted_macro'],
-            'Number of Emitted Micro': length['number_of_emitted_micro']
+            'Length (km)': value['length: '],
+            'Emission Mass Macro (kg)': value['emission_mass_macro'],
+            'Emission Mass Micro (kg)': value['emission_mass_micro'],
+            'Number of Emitted Macro': value['number_of_emitted_macro'],
+            'Number of Emitted Micro': value['number_of_emitted_micro']
         })
 
     try:

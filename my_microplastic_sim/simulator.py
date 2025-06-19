@@ -1,5 +1,5 @@
 import math
-from .config import polymers#import math
+from .config import polymers
 
 
 def simulate_abrasion(total_length, w_eff_min, w_eff_max):

@@ -67,9 +67,15 @@ def plastic_emission_per_river(data,  plastic_em):
 
 
   """
+  Typ 5: Grobmaterialreiche, silikatische Mittelgebirgsbäche
   River index: 1, Length: 2832.52 km
   Emission Mass Macro: 1704.22 kg
   Emission Mass Micro: 1495.43 kg
-  Number of emitted macroplastic particles: 17.38999282736645
-  Number of emitted microplastic particles: 23314793.567154568 
+  Number of emitted macroplastic particles: 17389,99283
+  Number of emitted microplastic particles: 23314793.567154568
+
+  Wobei:
+  density = 980,
+  volume_macro = 0.0001  # volume of macroplastic particles in m³,
+  diameter_micro = 0.005 # diameter of microplastic particles in meters
   """

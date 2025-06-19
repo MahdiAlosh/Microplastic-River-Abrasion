@@ -6,6 +6,7 @@ from my_microplastic_sim.simulator import simulate_abrasion
 from my_microplastic_sim.exporter import save_results_to_excel
 from Emission_sim.plastic_emission import plastic_emission
 from Emission_sim.plastic_em_per_river import plastic_emission_per_river
+from Emission_sim.task6_recalc_contactarea_and_volume import recalc_contactarea_and_volume
 
 def main():
     # 1. Hauptfunktion des Programms => Einstiegspunkt
@@ -46,9 +47,13 @@ def main():
     plastic_em = plastic_emission()
     em_results = plastic_emission_per_river(data, plastic_em)
 
-    # 5. Ergebnisse in Excel speichern
-    save_results_to_excel("finale_results.xlsx", all_results, em_results)
-    print("Results saved in finale_results.xlsx\n")
+    # 5. 
+    recalc_contactarea_and_volume(em_results)
+    # print(em_results)
+
+    # 6. Ergebnisse in Excel speichern
+    # save_results_to_excel("finale_results.xlsx", all_results, em_results)
+    # print("Results saved in finale_results.xlsx\n")
 
 
 if __name__ == "__main__":

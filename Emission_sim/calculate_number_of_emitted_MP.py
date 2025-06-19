@@ -4,7 +4,7 @@ from math import pi
 def calculate_number_of_emitted_MP(emission_mass_macro, emission_mass_micro):
   # density of plastic particles in kg/m³
   density = 980
-  volume_macro = 0.1  # volume of macroplastic particles in m³
+  volume_macro = 0.0001  # volume of macroplastic particles in m³
   diameter_micro = 0.005 # diameter of microplastic particles in meters
   
   number_of_emitted_macro = emission_mass_macro / (density * volume_macro)

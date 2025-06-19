@@ -1,5 +1,6 @@
 def calculate_emission_factors():
   # Konstante für EU-Bevölkerung
+  # https://european-union.europa.eu/principles-countries-history/facts-and-figures-european-union_en
   eu_population = 448000000
 
   # Rohdaten: District und deren Population
