@@ -2,9 +2,11 @@ from Emission_sim.calculate_number_of_emitted_MP import calculate_number_of_emit
 
 def plastic_emission_per_river(data,  plastic_em):
   
+  # Step 1: Initialize results dictionary and index counter
   em_results = {}
   index = 0
 
+  # Step 2: Collect river types and their lengths if length > 0
   for _, row in data.iterrows():
       water_type = row["Type"]
       river_length = row["Length (km)"]
@@ -15,17 +17,14 @@ def plastic_emission_per_river(data,  plastic_em):
         }
 
   total_length = 0.0
-  # Calculate the plastic emission per river
+  # Step 3: Calculate the total length of all rivers
   for _, length in em_results.items():
       # index = length['index']
       length = length['length']
 
       total_length += length 
 
-  # print(f"Plastic Emission Macro: {plastic_em[0]:.2f} kg")
-  # print(f"Plastic Emission Micro: {plastic_em[1]:.2f} kg")
-  # print(f"Total Length of All Rivers: {total_length:.2f} km")
-
+  # Step 4: Calculate plastic emission per river (per km) for each polymer and size
   plastic_em_per_river_macro_ps = plastic_em[0] / total_length
   plastic_em_per_river_micro_ps = plastic_em[1] / total_length
   plastic_em_per_river_macro_pet = plastic_em[2] / total_length
@@ -33,13 +32,7 @@ def plastic_emission_per_river(data,  plastic_em):
   plastic_em_per_river_macro_pa = plastic_em[4] / total_length
   plastic_em_per_river_micro_pa = plastic_em[5] / total_length
 
-  # print(f"Plastic Emission Macro per River: {plastic_em_per_river_macro:.2f} kg/km")
-  # print(f"Plastic Emission Micro per River: {plastic_em_per_river_micro:.2f} kg/km")
-
-  # emission mass = river type length * plastic emission per km
-  # total_emission_mass_macro = 0.0
-  # total_emission_mass_micro = 0.0
-
+  # Step 5: For each river type, calculate emission mass and number of emitted particles
   for river_type, length in em_results.items():
       # index = length['index']
       length = length['length']
@@ -50,8 +43,10 @@ def plastic_emission_per_river(data,  plastic_em):
       emission_mass_macro_pa = length * plastic_em_per_river_macro_pa
       emission_mass_micro_pa = length * plastic_em_per_river_micro_pa
 
+      # Step 6: Calculate the number of emitted particles for each polymer and size
       number_of_emitted =  calculate_number_of_emitted_MP(emission_mass_macro_ps, emission_mass_micro_ps, emission_mass_macro_pet, emission_mass_micro_pet, emission_mass_macro_pa, emission_mass_micro_pa)
       
+      # Step 7: Store the results in the dictionary
       em_results[river_type].update({
         # "emission_mass_macro_ps": emission_mass_macro_ps,
         # "emission_mass_micro_ps": emission_mass_micro_ps,
@@ -66,33 +61,5 @@ def plastic_emission_per_river(data,  plastic_em):
         "number_of_emitted_macro_pa": number_of_emitted[4],
         "number_of_emitted_micro_pa": number_of_emitted[5]
       })
-
+  # Step 8: Return the results dictionary containing emission data for each river type
   return em_results
-  # =================================================================== 
-  #     total_emission_mass_macro += emission_mass_macro
-  #     total_emission_mass_micro += emission_mass_micro
-
-  # print(f"Total Emission Mass Macro: {total_emission_mass_macro} kg")
-  # print(f"Total Emission Mass Micro: {total_emission_mass_micro} kg")
-
-  # print("Results:\n", em_results)
-  # print(f"Plastic Emission Macro: {plastic_em[0]:.2f} kg")
-  # print(f"Plastic Emission Micro: {plastic_em[1]:.2f} kg")
-
-  # calculate_number_of_emitted_MP(total_emission_mass_macro, total_emission_mass_micro)
-
-
-
-  """
-  Typ 5: Grobmaterialreiche, silikatische Mittelgebirgsbäche
-  River index: 1, Length: 2832.52 km
-  Emission Mass Macro: 1704.22 kg
-  Emission Mass Micro: 1495.43 kg
-  Number of emitted macroplastic particles: 17389,99283
-  Number of emitted microplastic particles: 23314793.567154568
-
-  Wobei:
-  density = 980,
-  volume_macro = 0.0001  # volume of macroplastic particles in m³,
-  diameter_micro = 0.005 # diameter of microplastic particles in meters
-  """

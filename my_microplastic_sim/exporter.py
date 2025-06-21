@@ -6,12 +6,15 @@ from PET.pet import pet
 from PS.ps import ps
 
 def save_results_to_excel(output_file, simulation_results_by_water_type, final_resulte):
+    # Step 1: Prepare a list to collect simulation results for each polymer and water type
     data = []
     
+    # Step 2: Load polymer dataframes for PA, PET, and PS
     pa_df,_,_= pa()
     pet_df,_,_ = pet()
     ps_df,_,_ = ps()
 
+    # Step 3: Collect simulation results for each polymer and water type
     for water_type, polymers_data in simulation_results_by_water_type.items():
         for polymer, values in polymers_data.items():
             data.append({
@@ -29,7 +32,7 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
                 'Remaining Km Max': values['remaining_km_max']
             })
     
-    # Convert final_resulte to DataFrame
+    # Step 4: Convert the final emission results to a DataFrame
     final_resulte_data = []
     for water_type, values in final_resulte.items():
         for polymer, polymer_values in values.items():
@@ -43,10 +46,11 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
             })
 
     try:
+        # Step 5: Create DataFrames from the collected data
         df = pd.DataFrame(data)
         final_resulte_df = pd.DataFrame(final_resulte_data)
         if os.path.exists(output_file):
-            # File exists: append/replace sheets
+            # Step 6: If the file exists, append or replace the sheets
             with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name='Polymer_Sim_Results', index=False)
                     final_resulte_df.to_excel(writer, sheet_name='Final_Results', index=False)
@@ -54,7 +58,7 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
                     pet_df.to_excel(writer, sheet_name="PET", index=False)
                     ps_df.to_excel(writer, sheet_name="PS", index=False)
         else:
-            # File doesn't exist: create and write all sheets
+            # Step 7: If the file doesn't exist, create it and write all sheets
             with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
                 df.to_excel(writer, sheet_name='Polymer_Sim_Results', index=False)
                 final_resulte_df.to_excel(writer, sheet_name='Final_Results', index=False)
@@ -63,5 +67,6 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
                 ps_df.to_excel(writer, sheet_name="PS", index=False)
 
     except Exception as e:
+        # Step 8: Print an error message if saving fails
         print(f"Error saving results to Excel: {e}")
 

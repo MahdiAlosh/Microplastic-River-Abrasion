@@ -1,9 +1,9 @@
 def calculate_emission_factors():
-  # Konstante für EU-Bevölkerung
+  # Step 1: Define the constant for the EU population
   # https://european-union.europa.eu/principles-countries-history/facts-and-figures-european-union_en
   eu_population = 448000000
 
-  # Rohdaten: District und deren Population
+  # Step 2: Define raw data for districts and their populations
   population_data = {
       "Chemnitz, Stadt": 250681,
       "Erzgebirgskreis": 326896,
@@ -20,9 +20,9 @@ def calculate_emission_factors():
       "Nordsachsen": 199688
   }
 
-  # summrize population data
+  # Step 3: Summarize the total population from all districts
   total_population = sum(population_data.values())
-  # factor for total population
+  # Step 4: Calculate the factor for total population relative to the EU
   total_factor = total_population / eu_population
   # print(f"Total Population: {total_population}, Factor: {total_factor}")
 
@@ -30,4 +30,5 @@ def calculate_emission_factors():
 #   for district, factor in emission_factors.items():
 #       print(f"{district}: {factor}")
 
+  # Step 5: Return the calculated factor
   return total_factor #, total_population

@@ -4,40 +4,53 @@ import pandas as pd
 from tabulate import tabulate
 
 def process_all_types(data, result_df):
+    # Step 1: Initialize a list to collect results for all water types
     all_results = []
+    # Step 2: Iterate over each water type in the input data
     for i, type_name in enumerate(data["Typ und Bezeichnung"], 0):
-        # print(f"\n*********** {i+1}. {type_name} ***********")
+        # Step 2a: Select the corresponding row for the current water type
         selected_row = data.iloc[i]
+        # Step 2b: Process the current water type and get the result
         result = process_single_type(type_name, selected_row, result_df)
+        # Step 2c: If a result is returned, add it to the results list
         if result:
             all_results.append(result)
+    # Step 3: Return the list of results for all water types
     return all_results
 
 def process_single_type(type_name, selected_row, result_df):
+    # Step 1: Extract the type identifier from the type name
     type_id = extract_type_identifier(type_name)
     if not type_id:
         # print(f"Warning: Type Identifier für '{type_name}' nicht gefunden.")
+        # Step 1a: If no identifier is found, skip this type
         return None
 
+    # Step 2: Find the matching row in the result DataFrame for this type
     match = result_df[result_df["Gewässertyp"].apply(lambda x: extract_type_identifier(x) == type_id)]
     total_length = match.iloc[0]["Länge"] if not match.empty else 0
 
+    # Step 3: Extract slope and Strickler values for min and max scenarios
     slope_min = selected_row["Slope (min) in ‰"] / 1000
     slope_max = selected_row["Slope (max) in ‰"] / 1000
     strickler_min = selected_row["k_St (min)"]
     strickler_max = selected_row["k_St (max)"]
 
+    # Step 4: Calculate the power input for min and max scenarios
     w_eff_min = powerInput(slope_min, strickler_min)
     w_eff_max = powerInput(slope_max, strickler_max)
 
+    # Step 5: Calculate abrasion for each polymer for min and max scenarios
     polymer_min = polymerCalculator(w_eff_min)
     polymer_max = polymerCalculator(w_eff_max)
 
+    # Step 6: Multiply abrasion by total length for each polymer
     polymer_min_len = {k: v * total_length for k, v in polymer_min.items()}
     polymer_max_len = {k: v * total_length for k, v in polymer_max.items()}
 
     # print_type_tables(slope_min, slope_max, strickler_min, strickler_max, w_eff_min, w_eff_max, polymer_min, polymer_max, polymer_min_len, polymer_max_len)
 
+    # Step 7: Build the result row for this water type
     row = {
         "Type": type_name,
         "Length (km)": total_length,
@@ -50,6 +63,7 @@ def process_single_type(type_name, selected_row, result_df):
         row[f"Min {p.upper()} To. Length (s) (mg/m²*m)"] = polymer_min_len[p]
         row[f"Max {p.upper()} To. Length (s) (mg/m²*m)"] = polymer_max_len[p]
 
+    # Step 8: Return the result row
     return row
 
 # def print_type_tables(slope_min, slope_max, strickler_min, strickler_max, w_min, w_max, p_min, p_max, p_min_len, p_max_len):

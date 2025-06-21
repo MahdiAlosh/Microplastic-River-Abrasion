@@ -9,29 +9,31 @@ from Emission_sim.plastic_em_per_river import plastic_emission_per_river
 from Emission_sim.total_mp_mass_emission_per_river import total_mp_mass_emission_per_river
 
 def main():
-    # 1. Hauptfunktion des Programms => Einstiegspunkt
-    # Dateien laden
+    # Main function of the program - entry point
+    # Step 1: Load all necessary files and data
     data, result_df = load_all_files()
     if data is None or result_df is None:
         return
 
-    # 2. Typen verarbeiten
+    # Step 2: Process all water types using the loaded data
     simulation_results_by_water_type = process_all_types(data, result_df)
 
-    # Ergebnisse exportieren
+    # Step 3: Export the processed results (e.g., to Excel or other formats)
     export_results(simulation_results_by_water_type, result_df)
 
-    # 3. MyMicroplasticSim-Funktionen
+    # Step 4: Load calculation results from an Excel file for further simulation
     excel_file = "../Microplastic-River-Abrasion/calculation_results.xlsx"
     data = load_excel_data(excel_file)
     if data is None:
         return
     simulation_results_by_water_type = {}
 
+    # Step 5: Calculate plastic emission and emission per river
     counter = 0
     plastic_em = plastic_emission()
     em_results = plastic_emission_per_river(data, plastic_em)
 
+    # Step 6: Simulate abrasion for each water type and store the results
     for _, row in data.iterrows():
         water_type = row["Type"]
         total_length = row["Length (km)"]
@@ -44,11 +46,11 @@ def main():
     
     print(f"Simulation completed for {counter} water types.\n")
     
-    # 5. total emission mass per river
+    # Step 7: Calculate the total microplastic emission mass per river
     final_resulte = total_mp_mass_emission_per_river(simulation_results_by_water_type, em_results)
     # print(final_resulte)
     
-    # 6. Ergebnisse in Excel speichern
+    # Step 8: Save the final results to an Excel file
     output_file = "finale_results.xlsx"
     save_results_to_excel(output_file, simulation_results_by_water_type ,final_resulte)
     print(f"Results saved in {output_file}\n")
