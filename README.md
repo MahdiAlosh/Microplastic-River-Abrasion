@@ -1,10 +1,10 @@
-# 🌊 Microplastic River Abrasion
+# Microplastic River Abrasion
 
 This project analyzes microplastic abrasion in river environments using experimental Excel data. It is intended to simulate and evaluate how microplastics may form and disperse based on physical and chemical properties of polymers, abrasion parameters, and river characteristics.
 
 ---
 
-## 🧩 Project Structure
+## Project Structure
 
 ```
 Microplastic-River-Abrasion/
@@ -82,7 +82,7 @@ Microplastic-River-Abrasion/
 
 ---
 
-## 🚀 Features and Workflow
+## Features and Workflow
 
 1. **Excel I/O (`excel_io.py`)**
    - Reads Excel files from the `data/` folder
@@ -132,7 +132,7 @@ python main.py
 
 ---
 
-## 🧪 Example Usage
+## Example Usage
 
 ```python
 from src.calculator import calculate_polymer_length
@@ -142,7 +142,7 @@ print(f"Polymer length: {result:.2f} µm")
 ```
 
 ---
-## 📦 Requirements
+## Requirements
 
 - `pandas`
 - `numpy`
@@ -150,6 +150,6 @@ print(f"Polymer length: {result:.2f} µm")
 - Python built-in libraries (`math`, `time`)
 ---
 
-## 🎯 Project Goal
+## Project Goal
 
 To support scientific research in environmental studies by modeling the formation of microplastics through abrasion mechanisms in river systems using real-world data and computational simulation.

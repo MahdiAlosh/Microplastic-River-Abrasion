@@ -13,16 +13,20 @@ def plastic_emission():
     _,_,pet_micro_sum = pet()
     _,_,ps_micro_sum = ps()
 
-    # summarize macro results of PA, PET, PS
-    macro_summary = pa_macro_sum + pet_macro_sum + ps_macro_sum
-    # summarize micro results of PA, PET, PS
-    micro_summary = pa_micro_sum + pet_micro_sum + ps_micro_sum
+    # # summarize macro results of PA, PET, PS
+    # macro_summary = pa_macro_sum + pet_macro_sum + ps_macro_sum
+    # # summarize micro results of PA, PET, PS
+    # micro_summary = pa_micro_sum + pet_micro_sum + ps_micro_sum
 
-    _, total_factor, _ = calculate_emission_factors()
-    _,_, total_population = calculate_emission_factors()
+    total_factor = calculate_emission_factors()
+    # _,_, total_population = calculate_emission_factors()
 
-    plastic_em_macro = total_factor * macro_summary
-    plastic_em_micro = total_factor * micro_summary
+    plastic_em_macro_pa = total_factor * pa_macro_sum
+    plastic_em_micro_pa = total_factor * pa_micro_sum
+    plastic_em_macro_pet = total_factor * pet_macro_sum
+    plastic_em_micro_pet = total_factor * pet_micro_sum
+    plastic_em_macro_ps = total_factor * ps_macro_sum
+    plastic_em_micro_ps = total_factor * ps_micro_sum
 
     # print(f"Total Population: {total_population}, Factor: {total_factor}")
     # print(f"Macro Plastic Emission: {macro_summary:.2f} kg")
@@ -30,4 +34,4 @@ def plastic_emission():
     # print(f"Plastic Emission Macro: {plastic_em_macro:.2f} kg")
     # print(f"Plastic Emission Micro: {plastic_em_micro:.2f} kg")
 
-    return plastic_em_macro, plastic_em_micro
+    return (plastic_em_macro_pa, plastic_em_micro_pa,plastic_em_macro_pet,plastic_em_micro_pet,plastic_em_macro_ps,plastic_em_micro_ps)

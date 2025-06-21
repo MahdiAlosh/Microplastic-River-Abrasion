@@ -26,16 +26,8 @@ def calculate_emission_factors():
   total_factor = total_population / eu_population
   # print(f"Total Population: {total_population}, Factor: {total_factor}")
 
-  # Ergebnis-Dictionary mit Emission Factors
-  emission_factors = {}
-
-  # Berechnung
-  for district, population in population_data.items():
-      factor = population / eu_population
-      emission_factors[district] = round(factor, 8)  # z.B. auf 8 Nachkommastellen gerundet
-
   # Ausgabe (optional)
 #   for district, factor in emission_factors.items():
 #       print(f"{district}: {factor}")
 
-  return emission_factors, total_factor, total_population
+  return total_factor #, total_population

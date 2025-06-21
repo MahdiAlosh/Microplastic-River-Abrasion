@@ -9,11 +9,9 @@ def polymerCalculator(w_eff):
         dict: Dictionary with polymer names as keys and calculated values as values
     """
     polymer = {
-        "ps_tio": 1.00036,
         "ps": 0.81021,
-        "petg": 0.52683,
         "pet": 0.35373,
-        "pa6": 0.32447
+        "pa": 0.32447
         }
     
     # Calculate the result for each polymer by multiplying w_eff with the polymer coefficient
