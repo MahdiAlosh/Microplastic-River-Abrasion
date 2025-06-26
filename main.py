@@ -7,6 +7,8 @@ from my_microplastic_sim.exporter import save_results_to_excel
 from Emission_sim.plastic_emission import plastic_emission
 from Emission_sim.plastic_em_per_river import plastic_emission_per_river
 from Emission_sim.total_mp_mass_emission_per_river import total_mp_mass_emission_per_river
+import os
+from datetime import datetime
 
 def main():
     # Main function of the program - entry point
@@ -51,10 +53,39 @@ def main():
     # print(final_resulte)
     
     # Step 8: Save the final results to an Excel file
-    output_file = "finale_results.xlsx"
+    # Step 8.1: Define the new folder name and path
+    results_folder = "simulation_results"  # or any name you prefer
+    project_root = os.getcwd()  # current working directory (project root)
+    results_path = os.path.join(project_root, results_folder)
+    # Step 8.2: Create the folder if it doesn't exist
+    os.makedirs(results_path, exist_ok=True)
+    # Step 8.3: Define the output file path in the new folder
+    output_file = os.path.join(results_path, "MP_production_Results.xlsx")
+    # output_file = "MP_production_Results.xlsx"
     save_results_to_excel(output_file, simulation_results_by_water_type ,final_resulte)
     print(f"Results saved in {output_file}\n")
 
+    # Step 8.4: Create timestamp text file in results folder
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    timestamp_file = os.path.join(results_path, "simulation_timestamp.txt")
+    # Create timestamp content
+    timestamp_content = f"""Simulation Completed
+    =====================
+    Date: {datetime.now().strftime("%Y-%m-%d")}
+    Time: {datetime.now().strftime("%H:%M:%S")}
+    Full Timestamp: {timestamp}
+
+    Files Generated:
+    - MP_production_Results.xlsx
+
+    Project Path: {project_root}
+    Results Path: {results_path}
+    """
+    # Write timestamp file
+    with open(timestamp_file, 'w') as f:
+        f.write(timestamp_content)
+    print(f"Timestamp saved in {timestamp_file}")
+    
 
 if __name__ == "__main__":
     main()

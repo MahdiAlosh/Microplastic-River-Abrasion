@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from datetime import datetime
 #from openpyxl import load_workbook
 from PA.pa import pa
 from PET.pet import pet
@@ -22,12 +23,16 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
                 'Polymer': polymer,
                 'Final Diameter Min (m)': values['final_diameter_min'],
                 'Final Diameter Max (m)': values['final_diameter_max'],
-                'Total Diameter Loss Min (m)': values['total_loss_diameter_min'],
-                'Total Diameter Loss Max (m)': values['total_loss_diameter_max'],
-                'Total Mass Loss Min (kg)': values['total_mass_loss_min'],
-                'Total Mass Loss Max (kg)': values['total_mass_loss_max'],
-                'Total Volume Loss Min (m³)': values['total_volume_loss_min'],
-                'Total Volume Loss Max (m³)': values['total_volume_loss_max'],
+                'Total Diameter Loss Min (m)': values['total_loss_diameter_micro_min'],
+                'Total Diameter Loss Max (m)': values['total_loss_diameter_micro_max'],
+                'Total Mass Loss micro Min (kg)': values['total_mass_loss_micro_min'],
+                'Total Mass Loss micro Max (kg)': values['total_mass_loss_micro_max'],
+                'Total Mass Loss macro Min (kg)': values['total_mass_loss_macro_min'],
+                'Total Mass Loss macro Max (kg)': values['total_mass_loss_macro_max'],
+                'Total Volume Loss micro Min (m³)': values['total_volume_loss_micro_min'],
+                'Total Volume Loss micro Max (m³)': values['total_volume_loss_micro_max'],
+                'Total Volume Loss macro Min (m³)': values['total_volume_loss_macro_min'],
+                'Total Volume Loss macro Max (m³)': values['total_volume_loss_macro_max'],
                 'Remaining Km Min': values['remaining_km_min'],
                 'Remaining Km Max': values['remaining_km_max']
             })
@@ -39,10 +44,10 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
             final_resulte_data.append({
                 'Water Type': water_type,
                 'Polymer': polymer,
-                'Total mass emission min macro(kg)': polymer_values["total_mass_loss_min_macro"],
-                'Total mass emission min micro(kg)': polymer_values["total_mass_loss_min_micro"],
-                'Total mass emission max macro(kg)': polymer_values["total_mass_loss_max_macro"],
-                'Total mass emission max micro(kg)': polymer_values["total_mass_loss_max_micro"]
+                'Total MP production macro min (kg)': polymer_values["total_mass_loss_min_macro"],
+                'Total MP production micro min (kg)': polymer_values["total_mass_loss_min_micro"],
+                'Total MP production macro max (kg)': polymer_values["total_mass_loss_max_macro"],
+                'Total MP production micro max (kg)': polymer_values["total_mass_loss_max_micro"]
             })
 
     try:
@@ -53,7 +58,7 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
             # Step 6: If the file exists, append or replace the sheets
             with pd.ExcelWriter(output_file, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
                     df.to_excel(writer, sheet_name='Polymer_Sim_Results', index=False)
-                    final_resulte_df.to_excel(writer, sheet_name='Final_Results', index=False)
+                    final_resulte_df.to_excel(writer, sheet_name='MP_production_Results', index=False)
                     pa_df.to_excel(writer, sheet_name="PA", index=False)
                     pet_df.to_excel(writer, sheet_name="PET", index=False)
                     ps_df.to_excel(writer, sheet_name="PS", index=False)

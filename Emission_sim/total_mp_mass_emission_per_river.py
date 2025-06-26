@@ -34,8 +34,10 @@ def total_mp_mass_emission_per_river(simulation_results_by_water_type, em_result
             # total_volume_loss_max = sim_polymer.get("total_volume_loss_max", 0)
 
             # Step 4c: Get the total mass loss values from the simulation
-            total_mass_loss_min = sim_polymer.get("total_mass_loss_min", 0)
-            total_mass_loss_max = sim_polymer.get("total_mass_loss_max", 0)
+            total_mass_loss_micro_min = sim_polymer.get("total_mass_loss_micro_min", 0)
+            total_mass_loss_micro_max = sim_polymer.get("total_mass_loss_micro_max", 0)
+            total_mass_loss_macro_min = sim_polymer.get("total_mass_loss_macro_min", 0)
+            total_mass_loss_macro_max = sim_polymer.get("total_mass_loss_macro_max", 0)
 
             # Step 4d: Calculate and store the total mass loss for micro and macro particles
             final_results[water_type][polymer] = {
@@ -43,10 +45,11 @@ def total_mp_mass_emission_per_river(simulation_results_by_water_type, em_result
                 # "total_volume_loss_min_micro": total_volume_loss_min * num_micro,
                 # "total_volume_loss_max_macro": total_volume_loss_max * num_macro,
                 # "total_volume_loss_max_micro": total_volume_loss_max * num_micro,
-                "total_mass_loss_min_macro": total_mass_loss_min * num_macro,
-                "total_mass_loss_min_micro": total_mass_loss_min * num_micro,
-                "total_mass_loss_max_macro": total_mass_loss_max * num_macro,
-                "total_mass_loss_max_micro": total_mass_loss_max * num_micro,
+                
+                "total_mass_loss_min_macro": total_mass_loss_macro_min * num_macro,
+                "total_mass_loss_min_micro": total_mass_loss_micro_min * num_micro,
+                "total_mass_loss_max_macro": total_mass_loss_macro_max * num_macro,
+                "total_mass_loss_max_micro": total_mass_loss_micro_max * num_micro,
             }
         
     # Step 5: Return the final results dictionary
