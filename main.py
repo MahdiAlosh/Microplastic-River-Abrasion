@@ -24,7 +24,7 @@ def main():
     export_results(simulation_results_by_water_type, result_df)
 
     # Step 4: Load calculation results from an Excel file for further simulation
-    excel_file = "../Microplastic-River-Abrasion/calculation_results.xlsx"
+    excel_file = "simulation_results/calculation_results.xlsx"
     data = load_excel_data(excel_file)
     if data is None:
         return

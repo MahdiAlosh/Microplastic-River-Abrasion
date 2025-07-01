@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 def export_results(all_results, result_df):
     # Step 1: Convert the results to a DataFrame
@@ -24,6 +25,14 @@ def export_results(all_results, result_df):
     # df = pd.concat([df, new_df], ignore_index=True)
 
     # Step 4: Export the DataFrame to an Excel file
-    output_file = "calculation_results.xlsx"
+    # Go one directory up from the current file's directory
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    results_folder = "simulation_results"
+    results_path = os.path.join(parent_dir, results_folder)
+    # Step 5: Create the folder if it doesn't exist
+    os.makedirs(results_path, exist_ok=True)
+    
+    output_file = os.path.join(results_path, "calculation_results.xlsx")
+    
     df.to_excel(output_file, index=False)
     print(f"\nResults exported to {output_file}\n")
