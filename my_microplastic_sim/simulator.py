@@ -1,5 +1,6 @@
 import math
 from .config import polymers
+from math import pi
 # from config import polymers
 
 def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
@@ -30,14 +31,16 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
             step_min += 1
 
             # Step 5a: Calculate the contact area (A) in m²
-            A = (0.5 * (1000 + 4 * (10*100))) / 1000000 # A = 1/2*(1000mm^2+4*(10*100)mm^2) => in quadratmer = 0,0025 m^2 # for macro v = a * b
+            # A = (0.5 * (1000 + 4 * (10*100))) / 1000000 # A = 1/2*(1000mm^2+4*(10*100)mm^2) => in quadratmer = 0,0025 m^2 # for macro v = a * b
             
+            A = (0.5 * (pi * (diameter_m_min**2)))
+
             # Step 5b: Calculate mass and volume loss for this step
-            mass_loss_kg_min = (a_pol * w_eff_min * A)
+            mass_loss_kg_min = (a_pol * w_eff_min * A) / 1000000
             volume_loss_m3_min = mass_loss_kg_min / density
 
             # Step 5c: Calculate the new volume after abrasion
-            initial_volume_m3_min = (math.pi/6) * diameter_m_min**3
+            initial_volume_m3_min = (math.pi/6) * (diameter_m_min**3)
             new_volume_m3_min = initial_volume_m3_min - volume_loss_m3_min
 
             sum_volume_loss_m3_micro_min += volume_loss_m3_min
@@ -67,11 +70,11 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
         while (diameter_m_max >= max_diameter_m) and (remaining_km_max > 0):
             step_max += 1
 
-            A = (0.5 * (1000 + 4 * (10*100))) / 1000000
-            mass_loss_kg_max = (a_pol * w_eff_max * A)
+            A = (0.5 * (pi * (diameter_m_max**2)))
+            mass_loss_kg_max = (a_pol * w_eff_max * A) / 1000000
             volume_loss_m3_max = mass_loss_kg_max / density
 
-            initial_volume_m3_max = (math.pi/6) * diameter_m_max**3
+            initial_volume_m3_max = (math.pi/6) * (diameter_m_max**3)
             new_volume_m3_max = initial_volume_m3_max - volume_loss_m3_max
 
             sum_volume_loss_m3_micro_max += volume_loss_m3_max
@@ -104,9 +107,10 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
             base_area_mm2 = 100 * 100  # 10000 mm²
             side_area_mm2 = c_current_min * 1000 * 100  # convert c to mm, multiply by width
             total_surface_area_mm2 = base_area_mm2 + 4 * side_area_mm2
-            A = 0.5 * total_surface_area_mm2 / 1000000  # convert to m² and take half
+            # A = 0.5 * total_surface_area_mm2 / 1000000  # convert to m² and take half
+            A = a * b
 
-            mass_loss_kg_min = (a_pol * w_eff_min * A)
+            mass_loss_kg_min = (a_pol * w_eff_min * A) / 1000000
             volume_loss_m3_min = mass_loss_kg_min / density
 
             current_volume_m3_min = a * b * c_current_min
@@ -139,10 +143,10 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
             base_area_mm2 = 100 * 100
             side_area_mm2 = c_current_max * 1000 * 100
             total_surface_area_mm2 = base_area_mm2 + 4 * side_area_mm2
-            A = 0.5 * total_surface_area_mm2 / 1000000
-            
+            #A = 0.5 * total_surface_area_mm2 / 1000000
+            A = a * b
             # Calculate losses for max scenario
-            mass_loss_kg_max = (a_pol * w_eff_max * A)
+            mass_loss_kg_max = (a_pol * w_eff_max * A) / 1000000
             volume_loss_m3_max = mass_loss_kg_max / density
             
             current_volume_m3_max = a * b * c_current_max

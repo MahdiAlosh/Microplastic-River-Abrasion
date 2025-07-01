@@ -66,7 +66,7 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
             # Step 7: If the file doesn't exist, create it and write all sheets
             with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
                 df.to_excel(writer, sheet_name='Polymer_Sim_Results', index=False)
-                final_resulte_df.to_excel(writer, sheet_name='Final_Results', index=False)
+                final_resulte_df.to_excel(writer, sheet_name='MP_production_Results', index=False)
                 pa_df.to_excel(writer, sheet_name="PA", index=False)
                 pet_df.to_excel(writer, sheet_name="PET", index=False)
                 ps_df.to_excel(writer, sheet_name="PS", index=False)

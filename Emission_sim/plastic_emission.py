@@ -27,4 +27,6 @@ def plastic_emission():
     plastic_em_micro_ps = total_factor * ps_micro_sum
 
     # Step 5: Return the calculated emissions as a tuple
-    return (plastic_em_macro_pa, plastic_em_micro_pa,plastic_em_macro_pet,plastic_em_micro_pet,plastic_em_macro_ps,plastic_em_micro_ps)
+    return (plastic_em_macro_ps, plastic_em_micro_ps,plastic_em_macro_pet,plastic_em_micro_pet,plastic_em_macro_pa,plastic_em_micro_pa)
+
+    # Reihenfolge!!!
