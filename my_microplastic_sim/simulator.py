@@ -3,7 +3,7 @@ from .config import polymers
 from math import pi
 # from config import polymers
 
-def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
+def t6_simulate_abrasion(exposure_time_min, exposure_time_max, w_eff_min, w_eff_max):
 
     # Step 1: Initialize a dictionary to store simulation results for each polymer
     sim_results = {}
@@ -11,15 +11,15 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
         # Step 2: Set initial and minimum diameters (in meters)
         initial_diameter_m = 0.005 # in micrometer = 5000 µm
         min_diameter_m = max_diameter_m = 0.00003 # im micrometer = 30 µm
-        river_length_km = total_length
+        exposure_time_min_h = exposure_time_min
 
         # Step 3: Get density and abrasion coefficient for the current polymer
         density = polymers[polymer]["density"]
-        a_pol = polymers[polymer]["a"]
+        a_pol = polymers[polymer]["a"] * 3600       #convert from mg/m²s to mg/m²h
 
         # Step 4: Initialize variables for the minimum abrasion scenario
         diameter_m_min = initial_diameter_m
-        remaining_km_min = river_length_km
+        remaining_h_min_micro = exposure_time_min_h
         step_min = 0
         sum_volume_loss_m3_micro_min = sum_volume_loss_m3_micro_max = sum_mass_loss_kg_micro_min = sum_mass_loss_kg_micro_max = sum_loss_diameter_m_micro_min = sum_loss_diameter_m_micro_max = 0
 
@@ -27,7 +27,7 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
         initial_volume_m3_min = (math.pi/6) * diameter_m_min**3 # for macro initial volume as V = a*b*c
 
         # Step 5: Simulate abrasion for minimum effective power
-        while (diameter_m_min >= min_diameter_m) and (remaining_km_min > 0): # iintil c <= 0
+        while (diameter_m_min >= min_diameter_m) and (remaining_h_min_micro > 0): # iintil c <= 0
             step_min += 1
 
             # Step 5a: Calculate the contact area (A) in m²
@@ -57,17 +57,18 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
 
             # Step 5f: Update diameter and remaining river length
             diameter_m_min = loss_diameter_m_min
-            remaining_km_min -= 1
+            remaining_h_min_micro -= 1
 
         
         # Step 6: Initialize variables for the maximum abrasion scenario
         diameter_m_max = initial_diameter_m
-        remaining_km_max = river_length_km
+        exposure_time_max_h = exposure_time_max
+        remaining_h_max_micro = exposure_time_max_h
         step_max = 0
 
         initial_volume_m3_max = (math.pi/6) * diameter_m_max**3
 
-        while (diameter_m_max >= max_diameter_m) and (remaining_km_max > 0):
+        while (diameter_m_max >= max_diameter_m) and (remaining_h_max_micro > 0):
             step_max += 1
 
             A = (0.5 * (pi * (diameter_m_max**2)))
@@ -88,7 +89,7 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
             sum_loss_diameter_m_micro_max += new_diameter_m_max
 
             diameter_m_max = loss_diameter_m_max
-            remaining_km_max -= 1
+            remaining_h_max_micro -= 1
 
 # ===========================================================
         a = 0.1 # in m
@@ -97,16 +98,17 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
         c_current_min = c_initial
         step_min = 0
         sum_volume_loss_m3_macro_min = sum_mass_loss_kg_macro_min = sum_loss_height_m_min = 0
+        remaining_h_min_macro = exposure_time_min_h
 
         # Calculate the initial volume of the cube (in cubic meters)
         initial_volume_m3_min = a * b * c_current_min
 
         # Simulate abrasion for minimum effective power
-        while (c_current_min >= min_diameter_m) and (remaining_km_min > 0):
+        while (c_current_min >= min_diameter_m) and (remaining_h_min_macro > 0):
             step_min += 1
             base_area_mm2 = 100 * 100  # 10000 mm²
             side_area_mm2 = c_current_min * 1000 * 100  # convert c to mm, multiply by width
-            total_surface_area_mm2 = base_area_mm2 + 4 * side_area_mm2
+            #total_surface_area_mm2 = base_area_mm2 + 4 * side_area_mm2
             # A = 0.5 * total_surface_area_mm2 / 1000000  # convert to m² and take half
             A = a * b
 
@@ -128,22 +130,18 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
 
             # Update height and remaining river length
             c_current_min = c_new_min
-            remaining_km_min -= 1
+            remaining_h_min_macro -= 1
         
         # Similar structure for maximum abrasion scenario
         c_current_max = c_initial
-        remaining_km_max = river_length_km
+        remaining_h_max_macro = exposure_time_max_h
         step_max = 0
         sum_volume_loss_m3_macro_max = sum_mass_loss_kg_macro_max = sum_loss_height_m_max = 0
 
-        while (c_current_max >= max_diameter_m) and (remaining_km_max > 0):
+        while (c_current_max >= max_diameter_m) and (remaining_h_max_macro > 0):
             step_max += 1
             
             # Calculate contact area for max scenario
-            base_area_mm2 = 100 * 100
-            side_area_mm2 = c_current_max * 1000 * 100
-            total_surface_area_mm2 = base_area_mm2 + 4 * side_area_mm2
-            #A = 0.5 * total_surface_area_mm2 / 1000000
             A = a * b
             # Calculate losses for max scenario
             mass_loss_kg_max = (a_pol * w_eff_max * A) / 1000000
@@ -162,7 +160,7 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
             sum_loss_height_m_max += loss_height_m_max
             
             c_current_max = c_new_max
-            remaining_km_max -= 1
+            remaining_h_max_macro -= 1
 
 # ===========================================================
 
@@ -180,8 +178,10 @@ def t6_simulate_abrasion(total_length, w_eff_min, w_eff_max):
             'total_volume_loss_micro_max': sum_volume_loss_m3_micro_max,
             'total_volume_loss_macro_min': sum_volume_loss_m3_macro_min,
             'total_volume_loss_macro_max': sum_volume_loss_m3_macro_max,
-            'remaining_km_min': remaining_km_min,
-            'remaining_km_max': remaining_km_max
+            'remaining_h_min_micro': remaining_h_min_micro,
+            'remaining_h_max_micro': remaining_h_max_micro,
+            'remaining_h_min_macro': remaining_h_min_macro,
+            'remaining_h_max_macro': remaining_h_max_macro
         }
 
     # Step 8: Return the simulation results for all polymers

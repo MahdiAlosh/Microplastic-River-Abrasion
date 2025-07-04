@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+from datetime import datetime
 
 def export_results(all_results, result_df):
     # Step 1: Convert the results to a DataFrame
@@ -31,8 +32,10 @@ def export_results(all_results, result_df):
     results_path = os.path.join(parent_dir, results_folder)
     # Step 5: Create the folder if it doesn't exist
     os.makedirs(results_path, exist_ok=True)
-    
-    output_file = os.path.join(results_path, "calculation_results.xlsx")
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H-%M")
+    filename = f"calculation_results_{timestamp}.xlsx"
+    output_file = os.path.join(results_path, filename)
     
     df.to_excel(output_file, index=False)
     print(f"\nResults exported to {output_file}\n")

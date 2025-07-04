@@ -1,5 +1,5 @@
 polymers = {
-    "ps": {"a": 0.81021, "density": 1050}, # Density in kg/m³
-    "pet": {"a": 0.35373, "density": 1390},
-    "pa": {"a": 0.32447, "density": 1140}
+    "ps": {"a": 0.2188, "density": 1050}, # Density in kg/m³
+    "pet": {"a": 0.0955, "density": 1390},
+    "pa": {"a": 0.0893, "density": 1140}
 }

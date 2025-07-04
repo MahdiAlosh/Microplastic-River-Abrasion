@@ -15,16 +15,17 @@ def extract_type_identifier(type_name):
     # Step 3: Return None if no match is found
     return None
 
-def powerInput(slope, strickler):
+def powerInput(slope, strickler, water_level):
     # Step 1: Define physical constants and parameters
     p = 980   # density in kg/m³
     g = 9.81  # acceleration in m/s²
-    h = 1.53  # height of water column in m
     e = 0.1   # coefficient of efficiency
-    r = h     # hydraulic radius ^2/3
+    
 
     i = slope     # slope from Excel sheet converted to decimal number
     k = strickler # strickler coefficient from Excel sheet
+    h = water_level  # height of water column in m
+    r = h     # hydraulic radius ^2/3
 
     # Step 2: Calculate the power input using the provided formula
     result = (p * g * h * i) * (k * m.pow(r, 2/3) * m.pow(i, 1/2)) * e 

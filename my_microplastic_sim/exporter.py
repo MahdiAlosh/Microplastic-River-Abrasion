@@ -21,20 +21,22 @@ def save_results_to_excel(output_file, simulation_results_by_water_type, final_r
             data.append({
                 'Water Type': water_type,
                 'Polymer': polymer,
-                'Final Diameter Min (m)': values['final_diameter_min'],
-                'Final Diameter Max (m)': values['final_diameter_max'],
-                'Total Diameter Loss Min (m)': values['total_loss_diameter_micro_min'],
-                'Total Diameter Loss Max (m)': values['total_loss_diameter_micro_max'],
+                #'Final Diameter Min (m)': values['final_diameter_min'],
+                #'Final Diameter Max (m)': values['final_diameter_max'],
+                #'Total Diameter Loss Min (m)': values['total_loss_diameter_micro_min'],
+                #'Total Diameter Loss Max (m)': values['total_loss_diameter_micro_max'],
                 'Total Mass Loss micro Min (kg)': values['total_mass_loss_micro_min'],
                 'Total Mass Loss micro Max (kg)': values['total_mass_loss_micro_max'],
                 'Total Mass Loss macro Min (kg)': values['total_mass_loss_macro_min'],
                 'Total Mass Loss macro Max (kg)': values['total_mass_loss_macro_max'],
-                'Total Volume Loss micro Min (m³)': values['total_volume_loss_micro_min'],
-                'Total Volume Loss micro Max (m³)': values['total_volume_loss_micro_max'],
-                'Total Volume Loss macro Min (m³)': values['total_volume_loss_macro_min'],
-                'Total Volume Loss macro Max (m³)': values['total_volume_loss_macro_max'],
-                'Remaining Km Min': values['remaining_km_min'],
-                'Remaining Km Max': values['remaining_km_max']
+                #'Total Volume Loss micro Min (m³)': values['total_volume_loss_micro_min'],
+                #'Total Volume Loss micro Max (m³)': values['total_volume_loss_micro_max'],
+                #'Total Volume Loss macro Min (m³)': values['total_volume_loss_macro_min'],
+                #'Total Volume Loss macro Max (m³)': values['total_volume_loss_macro_max'],
+                'Remaining time Min Micro': values['remaining_h_min_micro'],
+                'Remaining time Max Micro': values['remaining_h_max_micro'],
+                'Remaining time Min Macro': values['remaining_h_min_macro'],
+                'Remaining time Max Macro': values['remaining_h_max_macro'],
             })
     
     # Step 4: Convert the final emission results to a DataFrame

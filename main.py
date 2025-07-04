@@ -24,7 +24,8 @@ def main():
     export_results(simulation_results_by_water_type, result_df)
 
     # Step 4: Load calculation results from an Excel file for further simulation
-    excel_file = "simulation_results/calculation_results.xlsx"
+    timestamp = datetime.now().strftime("%Y-%m-%d %H-%M")
+    excel_file = f"simulation_results/calculation_results_{timestamp}.xlsx"
     data = load_excel_data(excel_file)
     if data is None:
         return
@@ -39,11 +40,14 @@ def main():
     for _, row in data.iterrows():
         water_type = row["Type"]
         total_length = row["Length (km)"]
+        exposure_time_min = row["Min exposure time (h)"]
+        exposure_time_max = row["Max exposure time (h)"]
         w_eff_min = row["Min Power (w/m²)"]
         w_eff_max = row["Max Power (w/m²)"]
-        if total_length > 0:
+         
+        if exposure_time_min > 0 or exposure_time_max > 0:
             counter += 1
-            abrasion_simulation_results = t6_simulate_abrasion(total_length, w_eff_min, w_eff_max)
+            abrasion_simulation_results = t6_simulate_abrasion(exposure_time_min, exposure_time_max, w_eff_min, w_eff_max)
             simulation_results_by_water_type[water_type] = abrasion_simulation_results
     
     print(f"Simulation completed for {counter} water types.\n")
@@ -60,32 +64,13 @@ def main():
     # Step 8.2: Create the folder if it doesn't exist
     os.makedirs(results_path, exist_ok=True)
     # Step 8.3: Define the output file path in the new folder
-    output_file = os.path.join(results_path, "MP_production_Results.xlsx")
+    timestamp = datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+    filename = f"MP_production_results_{timestamp}.xlsx"
+    output_file = os.path.join(results_path, filename)
     # output_file = "MP_production_Results.xlsx"
     save_results_to_excel(output_file, simulation_results_by_water_type ,final_resulte)
     print(f"Results saved in {output_file}\n")
 
-    # Step 8.4: Create timestamp text file in results folder
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    timestamp_file = os.path.join(results_path, "simulation_timestamp.txt")
-    # Create timestamp content
-    timestamp_content = f"""Simulation Completed
-    =====================
-    Date: {datetime.now().strftime("%Y-%m-%d")}
-    Time: {datetime.now().strftime("%H:%M:%S")}
-    Full Timestamp: {timestamp}
-
-    Files Generated:
-    - MP_production_Results.xlsx
-
-    Project Path: {project_root}
-    Results Path: {results_path}
-    """
-    # Write timestamp file
-    with open(timestamp_file, 'w') as f:
-        f.write(timestamp_content)
-    print(f"Timestamp saved in {timestamp_file}")
-    
 
 if __name__ == "__main__":
     main()
